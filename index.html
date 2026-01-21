@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Assassin Briefing</title>
+    <style>
+    body {
+      background: black;
+      color: #0f0;
+      font-family: monospace;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .terminal {
+      border: 2px solid #0f0;
+      padding: 30px;
+      max-width: 600px;
+      text-align: center;
+      box-shadow: 0 0 20px #0f0;
+    }
+  </style>
+</head>
+<body>
+<div class="terminal">
+    <h1 id="greeting"></h1>
+    <p id="target"></p>
+</div>
+
+<script>
+    const params = new URLSearchParams(window.location.search);
+    const assassin = params.get("assassin");
+    const target = params.get("target");
+
+    const greetingEl = document.getElementById("greeting");
+    const targetEl = document.getElementById("target");
+
+    if (!assassin || !target) {
+      greetingEl.innerText = "INVALID BRIEFING";
+      targetEl.innerText = "Missing parameters.";
+    } else {
+      greetingEl.innerText = `Hello ${assassin}.`;
+      targetEl.innerText = `Your target is ${target}.`;
+    }
+  </script>
+</body>
+</html>
