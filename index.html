@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>Assassin Briefing</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
     <style>
     body {
       background: black;
-      color: #0f0;
-      font-family: monospace;
+      color: #EF5A98;
+      font-family: 'Orbitron', monospace;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -15,11 +16,14 @@
       margin: 0;
     }
     .terminal {
-      border: 2px solid #0f0;
+      border: 2px solid #EF5A98;
       padding: 30px;
-      max-width: 600px;
       text-align: center;
-      box-shadow: 0 0 20px #0f0;
+      box-shadow: 0 0 20px #EF5A98;
+      max-width: 600px;
+    }
+    h1, p {
+      margin: 0.5em 0;
     }
   </style>
 </head>
@@ -30,20 +34,39 @@
 </div>
 
 <script>
-    const params = new URLSearchParams(window.location.search);
-    const assassin = params.get("assassin");
-    const target = params.get("target");
-
-    const greetingEl = document.getElementById("greeting");
-    const targetEl = document.getElementById("target");
-
-    if (!assassin || !target) {
-      greetingEl.innerText = "INVALID BRIEFING";
-      targetEl.innerText = "Missing parameters.";
-    } else {
-      greetingEl.innerText = `Hello ${assassin}.`;
-      targetEl.innerText = `Your target is ${target}.`;
+  function decodeBase64Json(b64) {
+    try {
+      const json = decodeURIComponent(
+        atob(b64).split("").map(c =>
+          "%" + c.charCodeAt(0).toString(16).padStart(2, "0")
+        ).join("")
+      );
+      return JSON.parse(json);
+    } catch {
+      return null;
     }
-  </script>
+  }
+
+  const params = new URLSearchParams(window.location.search);
+  const dataParam = params.get("data");
+
+  const g = document.getElementById("greeting");
+  const t = document.getElementById("target");
+
+  if (!dataParam) {
+    g.innerText = "INVALID BRIEFING";
+    t.innerText = "Missing data parameter.";
+  } else {
+    const decoded = decodeBase64Json(dataParam);
+
+    if (!decoded || !decoded.assassin || !decoded.target) {
+      g.innerText = "CORRUPTED BRIEFING";
+      t.innerText = "Data could not be decoded.";
+    } else {
+      g.innerText = `Hello ${decoded.assassin}.`;
+      t.innerText = `Your target is ${decoded.target}.`;
+    }
+  }
+</script>
 </body>
 </html>
