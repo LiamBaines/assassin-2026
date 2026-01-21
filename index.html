@@ -3,19 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <title>Assassin Briefing</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
     <style>
-    body {
+    /* Global box-sizing */
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
       background: black;
-      color: #EF5A98;
       font-family: 'Orbitron', monospace;
+      color: #EF5A98;
+      overflow: hidden;
+    }
+
+    body {
       display: flex;
       align-items: center;
       justify-content: center;
-      min-height: 100vh;
-      margin: 0;
-      padding: 1rem;
     }
 
     .terminal {
@@ -24,8 +33,7 @@
       text-align: center;
       box-shadow: 0 0 20px #EF5A98;
       max-width: 600px;
-      width: 100%;
-      box-sizing: border-box;
+      width: 90%;
       border-radius: 12px;
     }
 
@@ -61,6 +69,14 @@
 </div>
 
 <script>
+    // Dynamically set body height to viewport height to prevent scroll issues
+    function setVh() {
+      document.body.style.height = window.innerHeight + 'px';
+    }
+    window.addEventListener('resize', setVh);
+    setVh();
+
+    // Decode Base64 JSON
     function decodeBase64Json(b64) {
       try {
         const json = decodeURIComponent(
