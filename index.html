@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
     <style>
-    /* Global box-sizing */
     *, *::before, *::after {
       box-sizing: border-box;
     }
@@ -49,6 +48,21 @@
       word-break: break-word;
     }
 
+    button {
+      margin-top: 1rem;
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      background: #EF5A98;
+      color: black;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #ff7bb5;
+    }
+
     @media (max-width: 400px) {
       h1 {
         font-size: 1.5rem;
@@ -59,24 +73,26 @@
       .terminal {
         padding: 1.5rem;
       }
+      button {
+        font-size: 0.9rem;
+      }
     }
   </style>
 </head>
 <body>
 <div class="terminal">
     <h1 id="greeting"></h1>
-    <p id="target"></p>
+    <p id="target" style="display: none;"></p>
+    <button id="revealBtn" style="display: none;">Reveal Target</button>
 </div>
 
 <script>
-    // Dynamically set body height to viewport height to prevent scroll issues
     function setVh() {
       document.body.style.height = window.innerHeight + 'px';
     }
     window.addEventListener('resize', setVh);
     setVh();
 
-    // Decode Base64 JSON
     function decodeBase64Json(b64) {
       try {
         const json = decodeURIComponent(
@@ -95,19 +111,27 @@
 
     const g = document.getElementById("greeting");
     const t = document.getElementById("target");
+    const btn = document.getElementById("revealBtn");
 
     if (!dataParam) {
       g.innerText = "INVALID BRIEFING";
+      t.style.display = "block";
       t.innerText = "Missing data parameter.";
     } else {
       const decoded = decodeBase64Json(dataParam);
 
       if (!decoded || !decoded.assassin || !decoded.target) {
         g.innerText = "CORRUPTED BRIEFING";
+        t.style.display = "block";
         t.innerText = "Data could not be decoded.";
       } else {
         g.innerText = `Hello ${decoded.assassin}.`;
         t.innerText = `Your target is ${decoded.target}.`;
+        btn.style.display = "inline-block";
+        btn.addEventListener("click", () => {
+          t.style.display = "block";
+          btn.style.display = "none";
+        });
       }
     }
   </script>
