@@ -78,11 +78,13 @@
         font-size: 0.9rem;
       }
     }
-  </style>
+
+    </style>
 </head>
 <body>
 <div class="terminal">
     <h1 id="greeting"></h1>
+    <p id="assassinId"></p>
     <p id="target" style="display: none;"></p>
     <button id="revealBtn" style="display: none;">Reveal Target</button>
 </div>
@@ -111,23 +113,33 @@
     const dataParam = params.get("data");
 
     const g = document.getElementById("greeting");
+    const idEl = document.getElementById("assassinId");
     const t = document.getElementById("target");
     const btn = document.getElementById("revealBtn");
 
     if (!dataParam) {
       g.innerText = "INVALID BRIEFING";
+      idEl.innerText = "";
       t.style.display = "block";
       t.innerText = "Missing data parameter.";
     } else {
       const decoded = decodeBase64Json(dataParam);
 
-      if (!decoded || !decoded.assassin || !decoded.target) {
+      const validId =
+        decoded &&
+        typeof decoded.id === "string" &&
+        /^\d{4}$/.test(decoded.id);
+
+      if (!decoded || !decoded.assassin || !decoded.target || !validId) {
         g.innerText = "CORRUPTED BRIEFING";
+        idEl.innerText = "";
         t.style.display = "block";
         t.innerText = "Data could not be decoded.";
       } else {
         g.innerText = `Hello ${decoded.assassin}.`;
+        idEl.innerText = `Assassin ID: ${decoded.id}`;
         t.innerText = `Your target is ${decoded.target}.`;
+
         btn.style.display = "inline-block";
         btn.addEventListener("click", () => {
           t.style.display = "block";
@@ -135,6 +147,8 @@
         });
       }
     }
-  </script>
+
+</script>
+
 </body>
 </html>
