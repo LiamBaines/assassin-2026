@@ -79,14 +79,39 @@
       }
     }
 
+    .reveal-area {
+      position: relative;
+      margin-top: 1rem;
+      min-height: 2.5em; /* enough for one line of text or button */
+    }
+
+    #target,
+    #revealBtn {
+      position: absolute;
+      left: 0;
+      right: 0;
+    }
+
+    #target {
+      visibility: hidden;
+    }
+
+    #revealBtn {
+      font-family: 'Orbitron', monospace;
+    }
+
     </style>
 </head>
 <body>
 <div class="terminal">
     <h1 id="greeting"></h1>
     <p id="assassinId"></p>
-    <p id="target" style="display: none;"></p>
-    <button id="revealBtn" style="display: none;">Reveal Target</button>
+
+    <div class="reveal-area">
+        <p id="target">Your target is …</p>
+        <button id="revealBtn">Reveal Target</button>
+    </div>
+
 </div>
 
 <script>
@@ -140,11 +165,15 @@
         idEl.innerText = `Assassin ID: ${decoded.id}`;
         t.innerText = `Your target is ${decoded.target}.`;
 
+        t.style.visibility = "hidden";
+        btn.style.visibility = "visible";
+
         btn.style.display = "inline-block";
         btn.addEventListener("click", () => {
-          t.style.display = "block";
-          btn.style.display = "none";
+          t.style.visibility = "visible";
+          btn.style.visibility = "hidden";
         });
+
       }
     }
 
