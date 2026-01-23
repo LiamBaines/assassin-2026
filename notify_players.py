@@ -1,6 +1,7 @@
 import csv
 import json
 import requests
+import time
 
 WEBHOOK_URL = "https://hooks.slack.com/triggers/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"
 
@@ -23,6 +24,7 @@ with open(IDS_FILE, newline="") as f:
 
 # Send webhook for each player
 for name in players:
+    time.sleep(1)
     if name not in ids:
         raise ValueError(f"No ID found for player '{name}'")
 
