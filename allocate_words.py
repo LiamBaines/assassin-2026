@@ -64,4 +64,4 @@ for player, word in zip(players, words):
     if resp.status_code != 200:
         print(f"Failed to send word to {player['name']} ({player['slack_user_id']}): {resp.text}")
     else:
-        print(f"Sent word '{word}' to {player['name']}")
+        print(f"Sent word to {player['name']}")
