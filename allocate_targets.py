@@ -2,7 +2,7 @@ import csv
 import random
 
 input_file = "players.csv"
-output_file = "targets/player_targets.csv"
+output_file = "target/player_targets.csv"
 
 # Read players
 with open(input_file, newline='') as f:

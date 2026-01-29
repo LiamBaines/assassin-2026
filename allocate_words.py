@@ -25,10 +25,15 @@ client = OpenAI()
 prompt = (
     f"Generate {num_players} random words for me. The words will be used in a game of "
     "word assassin, where players try to get someone to say the word, so they shouldn't be "
-    "super common (i.e. likely to come up naturally in conversation regardless). This is for "
+    "super common (i.e. likely to come up naturally in conversation regardless), though you should "
+    "avoid words that the average person would likely be completely unfamiliar with. This is for "
     "a group of colleagues who work as software engineers in a UK bank, so avoid words that "
     "could easily be elicited by discussing work (e.g. words related to payments, Java, biometrics, "
-    "or general workplace terminology). Give your response as a comma-separated list without any other content."
+    "or general workplace terminology). Avoid words commonly used by language models as 'interesting'"
+    "examples (e.g. quasar, zeppelin, alcove, serendipity, ephemeral, labyrinth, juxtaposition). "
+    "Give your response as a comma-separated list without any other content. Avoid poetic, sci-fi, "
+    "or creative-writing-prompt style words. Generate a new random starting letter before deciding each "
+    "word. Give your response as a comma-separated list without any other content."
 )
 
 response = client.chat.completions.create(
