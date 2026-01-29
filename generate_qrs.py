@@ -12,7 +12,7 @@ with open(INPUT_CSV, newline="", encoding="utf-8") as csvfile:
 
     for row in reader:
         player = row["player"].strip()
-        url = "https://liambaines.github.io/assassin-2026/?data=" + row["card_data"].strip()
+        url = row["card_data"].strip()
 
         qr = qrcode.QRCode(
             version=1,

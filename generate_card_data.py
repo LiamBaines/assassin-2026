@@ -33,6 +33,6 @@ with open(output_file, 'w', newline='') as f:
         }
         json_str = json.dumps(data)
         b64_str = base64.b64encode(json_str.encode('utf-8')).decode('utf-8')
-        writer.writerow([player, b64_str])
+        writer.writerow([player, "liambaines.github.io/assassin-2026/?data=" + b64_str])
 
 print(f"Generated {output_file}")
