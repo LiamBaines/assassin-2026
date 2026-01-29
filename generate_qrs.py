@@ -3,7 +3,7 @@ import qrcode
 from pathlib import Path
 
 INPUT_CSV = "player_card_data.csv"
-OUTPUT_DIR = "qr_codes"
+OUTPUT_DIR = "target/qr_codes"
 
 Path(OUTPUT_DIR).mkdir(exist_ok=True)
 
