@@ -33,13 +33,25 @@
       box-shadow: 0 0 20px #EF5A98;
       max-width: 600px;
       width: 90%;
+      min-height: 250px; /* Ensures a consistent box size */
       border-radius: 12px;
+
+      /* Vertically center content inside the box */
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
     }
 
     h1 {
       font-size: 2rem;
-      margin-bottom: 1rem;
+      margin: 0; /* Removed margin to prevent offset when alone */
       word-break: break-word;
+    }
+
+    /* Add margin back only if there is following content */
+    h1:not(:last-child) {
+      margin-bottom: 1rem;
     }
 
     p {
@@ -60,33 +72,14 @@
       font-family: 'Orbitron', monospace;
     }
 
-    button:hover {
-      background: #ff7bb5;
-    }
-
-    @media (max-width: 400px) {
-      h1 {
-        font-size: 1.5rem;
-      }
-      p {
-        font-size: 1.2rem;
-      }
-      .terminal {
-        padding: 1.5rem;
-      }
-      button {
-        font-size: 0.9rem;
-      }
-    }
-
     .reveal-area {
       position: relative;
       margin-top: 1rem;
-      min-height: 2.5em; /* enough for one line of text or button */
+      width: 100%;
+      min-height: 2.5em;
     }
 
-    #target,
-    #revealBtn {
+    #target, #revealBtn {
       position: absolute;
       left: 0;
       right: 0;
@@ -96,22 +89,17 @@
       visibility: hidden;
     }
 
-    #revealBtn {
-      font-family: 'Orbitron', monospace;
-    }
-
     </style>
 </head>
 <body>
-<div class="terminal">
+<div class="terminal" id="box">
     <h1 id="greeting"></h1>
     <p id="assassinId"></p>
 
-    <div class="reveal-area">
-        <p id="target">Your target is …</p>
-        <button id="revealBtn">Reveal Target</button>
+    <div class="reveal-area" id="revealArea">
+        <p id="target"></p>
+        <button id="revealBtn" style="display: none;">Reveal Target</button>
     </div>
-
 </div>
 
 <script>
@@ -136,16 +124,23 @@
 
     const params = new URLSearchParams(window.location.search);
     const dataParam = params.get("data");
+    const versionParam = params.get("version");
 
     const g = document.getElementById("greeting");
     const idEl = document.getElementById("assassinId");
     const t = document.getElementById("target");
     const btn = document.getElementById("revealBtn");
+    const revealArea = document.getElementById("revealArea");
 
-    if (!dataParam) {
+    // Version logic
+    if (versionParam !== "2") {
+      g.innerText = "Black Card offline";
+      // Hide other elements entirely so they don't take up space
+      idEl.style.display = "none";
+      revealArea.style.display = "none";
+    } else if (!dataParam) {
       g.innerText = "INVALID BRIEFING";
-      idEl.innerText = "";
-      t.style.display = "block";
+      t.style.visibility = "visible";
       t.innerText = "Missing data parameter.";
     } else {
       const decoded = decodeBase64Json(dataParam);
@@ -157,8 +152,7 @@
 
       if (!decoded || !decoded.assassin || !decoded.target || !validId) {
         g.innerText = "CORRUPTED BRIEFING";
-        idEl.innerText = "";
-        t.style.display = "block";
+        t.style.visibility = "visible";
         t.innerText = "Data could not be decoded.";
       } else {
         g.innerText = `Hello ${decoded.assassin}.`;
@@ -166,18 +160,15 @@
         t.innerText = `Your target is ${decoded.target}.`;
 
         t.style.visibility = "hidden";
+        btn.style.display = "inline-block";
         btn.style.visibility = "visible";
 
-        btn.style.display = "inline-block";
         btn.addEventListener("click", () => {
           t.style.visibility = "visible";
           btn.style.visibility = "hidden";
         });
-
       }
     }
-
 </script>
-
 </body>
 </html>
