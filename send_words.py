@@ -6,7 +6,7 @@ import requests
 
 # --- Configuration ---
 PLAYERS_FILE = "players.csv"
-WORDS_FILE = "target/words.csv"
+WORDS_FILE = "target/words_round_3.csv"
 SLACK_WEBHOOK = "https://hooks.slack.com/triggers/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"
 
 # --- Optional CLI name filter ---

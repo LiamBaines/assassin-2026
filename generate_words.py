@@ -3,7 +3,7 @@ from openai import OpenAI
 
 # --- Configuration ---
 PLAYERS_FILE = "players.csv"
-OUTPUT_FILE = "target/words.csv"
+OUTPUT_FILE = "target/words_3.csv"
 
 # --- Read players ---
 players = []
@@ -30,7 +30,11 @@ prompt = (
     "examples (e.g. quasar, zeppelin, alcove, serendipity, ephemeral, labyrinth, juxtaposition). "
     "Give your response as a comma-separated list without any other content. Avoid poetic, sci-fi, "
     "or creative-writing-prompt style words. Generate a new random starting letter before deciding each "
-    "word."
+    "word. The words must be unique (no overlap). Do not include any of these words: mango, brick, funnel, "
+    "glacier, kiosk, parrot, hammock, velvet, telescope, cinnamon, orchard, tumble, plinth, grapple, buoy, "
+    "mitten, cactus, drape, locket, syringe, waffle, grotto, marsh, pebble, summit, ledger, mango, frost, "
+    "chapel, boulder, ivy, lantern, pebble, summit, orchard, kettle, hammock, bucket, clover, banquet, "
+    "ridge, walnut, fabric, silo, glacier, meadow, crest, thistle, canyon, cricket, echo, willow"
 )
 
 response = client.chat.completions.create(

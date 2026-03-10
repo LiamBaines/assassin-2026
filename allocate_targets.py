@@ -1,8 +1,8 @@
 import csv
 import random
 
-input_file = "players.csv"
-output_file = "target/player_targets.csv"
+input_file = "players_round_2.csv"
+output_file = "target/player_targets_round_2.csv"
 
 # Read players
 with open(input_file, newline='') as f:

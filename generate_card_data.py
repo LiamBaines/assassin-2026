@@ -3,9 +3,9 @@ import json
 import base64
 
 # Input files
-ids_file = "target/player_ids.csv"
-targets_file = "target/player_targets.csv"
-output_file = "target/player_card_data.csv"
+ids_file = "target/player_ids_round_2.csv"
+targets_file = "target/player_targets_round_2.csv"
+output_file = "target/player_card_data_round_2.csv"
 
 # Read player IDs
 player_id_map = {}
