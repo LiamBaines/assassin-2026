@@ -5,170 +5,140 @@
     <title>Assassin Briefing</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+
     <style>
-    *, *::before, *::after {
-      box-sizing: border-box;
-    }
+*, *::before, *::after { box-sizing: border-box; }
 
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      background: black;
-      font-family: 'Orbitron', monospace;
-      color: #EF5A98;
-      overflow: hidden;
-    }
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: black;
+  font-family: 'Orbitron', monospace;
+  color: #EF5A98;
+  overflow: hidden;
+}
 
-    body {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-    .terminal {
-      border: 2px solid #EF5A98;
-      padding: 2rem;
-      text-align: center;
-      box-shadow: 0 0 20px #EF5A98;
-      max-width: 600px;
-      width: 90%;
-      min-height: 250px; /* Ensures a consistent box size */
-      border-radius: 12px;
+.terminal {
+  border: 2px solid #EF5A98;
+  padding: 2rem;
+  text-align: center;
+  box-shadow: 0 0 20px #EF5A98;
+  max-width: 600px;
+  width: 90%;
+  min-height: 220px;
+  border-radius: 12px;
 
-      /* Vertically center content inside the box */
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-    }
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
 
-    h1 {
-      font-size: 2rem;
-      margin: 0; /* Removed margin to prevent offset when alone */
-      word-break: break-word;
-    }
+h1 {
+  font-size: 2rem;
+  margin: 0;
+  word-break: break-word;
+}
 
-    /* Add margin back only if there is following content */
-    h1:not(:last-child) {
-      margin-bottom: 1rem;
-    }
+p {
+  font-size: 1.5rem;
+  margin: 1rem 0 0 0;
+  word-break: break-word;
+}
 
-    p {
-      font-size: 1.5rem;
-      margin: 0;
-      word-break: break-word;
-    }
+button {
+  font-family: 'Orbitron', monospace;
+  font-size: 1.5rem; /* full size to match final text */
+  color: #EF5A98;
+  background: black;
+  border: 2px solid #EF5A98;
+  border-radius: 6px;
+  padding: 0.5rem 1rem; /* comfortable size */
+  cursor: pointer;
+}
 
-    button {
-      margin-top: 1rem;
-      padding: 0.5rem 1rem;
-      font-size: 1rem;
-      background: #EF5A98;
-      color: black;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-family: 'Orbitron', monospace;
-    }
+button:hover { background: #EF5A98; color: black; }
 
-    .reveal-area {
-      position: relative;
-      margin-top: 1rem;
-      width: 100%;
-      min-height: 2.5em;
-    }
-
-    #target, #revealBtn {
-      position: absolute;
-      left: 0;
-      right: 0;
-    }
-
-    #target {
-      visibility: hidden;
-    }
-
-    </style>
+#error { margin-top: 1rem; }
+</style>
 </head>
-<body>
-<div class="terminal" id="box">
-    <h1 id="greeting"></h1>
-    <p id="assassinId"></p>
 
-    <div class="reveal-area" id="revealArea">
-        <p id="target"></p>
-        <button id="revealBtn" style="display: none;">Reveal Target</button>
-    </div>
+<body>
+
+<div class="terminal">
+    <h1 id="greeting"></h1>
+    <div id="idContainer"></div>
+    <p id="error"></p>
 </div>
 
 <script>
-    function setVh() {
-      document.body.style.height = window.innerHeight + 'px';
-    }
-    window.addEventListener('resize', setVh);
-    setVh();
+function setVh() { document.body.style.height = window.innerHeight + 'px'; }
+window.addEventListener('resize', setVh);
+setVh();
 
-    function decodeBase64Json(b64) {
-      try {
-        const json = decodeURIComponent(
-          atob(b64).split("").map(c =>
-            "%" + c.charCodeAt(0).toString(16).padStart(2, "0")
-          ).join("")
-        );
-        return JSON.parse(json);
-      } catch {
-        return null;
-      }
-    }
+function decodeBase64Json(b64) {
+  try {
+    const json = decodeURIComponent(
+      atob(b64).split("").map(c => "%" + c.charCodeAt(0).toString(16).padStart(2,"0")).join("")
+    );
+    return JSON.parse(json);
+  } catch { return null; }
+}
 
-    const params = new URLSearchParams(window.location.search);
-    const dataParam = params.get("data");
-    const versionParam = params.get("version");
+const params = new URLSearchParams(window.location.search);
+const dataParam = params.get("data");
+const versionParam = params.get("version");
 
-    const g = document.getElementById("greeting");
-    const idEl = document.getElementById("assassinId");
-    const t = document.getElementById("target");
-    const btn = document.getElementById("revealBtn");
-    const revealArea = document.getElementById("revealArea");
+const g = document.getElementById("greeting");
+const idContainer = document.getElementById("idContainer");
+const err = document.getElementById("error");
 
-    // Version logic
-    if (versionParam !== "2") {
-      g.innerText = "Black Card offline";
-      // Hide other elements entirely so they don't take up space
-      idEl.style.display = "none";
-      revealArea.style.display = "none";
-    } else if (!dataParam) {
-      g.innerText = "INVALID BRIEFING";
-      t.style.visibility = "visible";
-      t.innerText = "Missing data parameter.";
-    } else {
-      const decoded = decodeBase64Json(dataParam);
+/* VERSION GATE */
+if (versionParam !== "3") {
+  g.innerText = "Black Card offline";
+  idContainer.style.display = "none";
+  err.style.display = "none";
+}
 
-      const validId =
-        decoded &&
-        typeof decoded.id === "string" &&
-        /^\d{4}$/.test(decoded.id);
+/* VERSION 3 LOGIC */
+else if (!dataParam) {
+  g.innerText = "INVALID BRIEFING";
+  err.innerText = "Missing data parameter.";
+}
+else {
+  const decoded = decodeBase64Json(dataParam);
+  const validId = decoded && typeof decoded.id === "string" && /^\d{4}$/.test(decoded.id);
 
-      if (!decoded || !decoded.assassin || !decoded.target || !validId) {
-        g.innerText = "CORRUPTED BRIEFING";
-        t.style.visibility = "visible";
-        t.innerText = "Data could not be decoded.";
-      } else {
-        g.innerText = `Hello ${decoded.assassin}.`;
-        idEl.innerText = `Assassin ID: ${decoded.id}`;
-        t.innerText = `Your target is ${decoded.target}.`;
+  if (!decoded || !decoded.assassin || !validId) {
+    g.innerText = "CORRUPTED BRIEFING";
+    err.innerText = "Data could not be decoded.";
+  }
+  else {
+    g.innerText = `Hello ${decoded.assassin}.`;
+    err.style.display = "none";
 
-        t.style.visibility = "hidden";
-        btn.style.display = "inline-block";
-        btn.style.visibility = "visible";
+    // create button
+    const btn = document.createElement("button");
+    btn.textContent = "Reveal assassin ID";
+    btn.addEventListener("click", () => {
+      const p = document.createElement("p");
+      p.style.fontSize = "1.5rem"; // ensure full size
+      p.textContent = `Assassin ID: ${decoded.id}`;
+      idContainer.innerHTML = "";
+      idContainer.appendChild(p);
+    });
 
-        btn.addEventListener("click", () => {
-          t.style.visibility = "visible";
-          btn.style.visibility = "hidden";
-        });
-      }
-    }
+    idContainer.appendChild(btn);
+  }
+}
 </script>
+
 </body>
 </html>
