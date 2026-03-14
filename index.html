@@ -114,8 +114,11 @@ else if (!dataParam) {
 }
 else {
   const decoded = decodeBase64Json(dataParam);
-  const validId = decoded && typeof decoded.id === "string" && /^\d{4}$/.test(decoded.id);
+  const validId = decoded && typeof decoded.id === "string";
 
+    console.log(decoded)
+    console.log(decoded.assassin)
+    console.log(validId)
   if (!decoded || !decoded.assassin || !validId) {
     g.innerText = "CORRUPTED BRIEFING";
     err.innerText = "Data could not be decoded.";
